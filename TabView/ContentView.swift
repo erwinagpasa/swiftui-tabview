@@ -9,33 +9,87 @@ import SwiftUI
 
 struct ContentView: View {
     
-    init() {
-        UITabBar.appearance().backgroundColor = UIColor.lightGray
-      }
+    @State var selectedIndex = 0
+
+    let icons = [
+        "house",
+        "gear",
+        "plus",
+        "lasso",
+        "message"
+    ]
     
     var body: some View {
-        TabView {
-            RedOneView()
-                .badge(2)
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Red")
-                }
+        VStack{
+            //Content
+            ZStack{
+                switch selectedIndex{
+                case 0:
+                    NavigationView{
+                        VStack{
+                            Text("First Screen")
+                        }
+                        .navigationTitle("Home")
+                    }
+               
+                case 1:
+                    NavigationView{
+                        VStack{
+                            Text("Settings Screen")
+                        }
+                        .navigationTitle("Settings")
+                    }
+                    
+                case 2:
+                    NavigationView{
+                        VStack{
+                            Text("Add Screen")
+                        }
+                        .navigationTitle("Add")
+                    }
 
-            BlueTwoView()
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Blue")
+                case 3:
+                    NavigationView{
+                        VStack{
+                            Text("Edit Screen")
+                        }
+                        .navigationTitle("Edit")
+                    }
+                    
+                default:
+                    NavigationView{
+                        VStack{
+                            Text("Message Screen")
+                        }
+                        .navigationTitle("Message")
+                    }
                 }
+            }
+            
+            Spacer() //Put the tab icons at the bottom
+            Divider()
+            
+            //Tabs
+            HStack{
+                ForEach(0..<5,id: \.self) { number in
+                    Spacer() //This makes the icons evenly
+                    Button(action: {
+                        self.selectedIndex = number
+                    }, label:{
+                        Image(systemName: icons[number])
+                            .font(.system(
+                                size: 25,
+                                weight: .regular,
+                                design: .default))
+                            .foregroundColor(selectedIndex == number ? .black : Color(UIColor.lightGray))
 
-            GreenThreeView()
-                .tabItem {
-                    Image(systemName: "bag")
-                    Text("Green")
+                    })
+                    Spacer() //This makes the icons evenly
                 }
+                
+            }
+            
         }
-        .accentColor(.blue)
-
     }
 }
 
