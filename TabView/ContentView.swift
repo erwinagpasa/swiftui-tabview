@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State var selectedIndex = 0
+    @State var presented = false
 
     let icons = [
         "house",
@@ -20,25 +21,27 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        VStack{
+        VStack(spacing:0) {
             //Content
             ZStack{
+                // If + icon tapped show fullscreen
+                Spacer().fullScreenCover(isPresented: $presented, content: {
+                    Button(action: {
+                        presented.toggle()
+                    }, label: {
+                        Text("Close")
+                            .frame(width: 200, height: 50)
+                            .background(Color.pink)
+                            .cornerRadius(12)
+                    })
+                })
+
                 switch selectedIndex{
                 case 0:
-                    NavigationView{
-                        VStack{
-                            Text("First Screen")
-                        }
-                        .navigationTitle("Home")
-                    }
+                   HomeView()
                
                 case 1:
-                    NavigationView{
-                        VStack{
-                            Text("Settings Screen")
-                        }
-                        .navigationTitle("Settings")
-                    }
+                    SettingsView()
                     
                 case 2:
                     NavigationView{
@@ -67,22 +70,40 @@ struct ContentView: View {
             }
             
             Spacer() //Put the tab icons at the bottom
-            Divider()
+            Divider().padding(.bottom, 20)
             
             //Tabs
             HStack{
                 ForEach(0..<5,id: \.self) { number in
                     Spacer() //This makes the icons evenly
                     Button(action: {
-                        self.selectedIndex = number
-                    }, label:{
-                        Image(systemName: icons[number])
-                            .font(.system(
-                                size: 25,
-                                weight: .regular,
-                                design: .default))
-                            .foregroundColor(selectedIndex == number ? .black : Color(UIColor.lightGray))
+                            
+                            if number == 2 {
+                                presented.toggle()
+                            }else{
+                                self.selectedIndex = number
+                            }
+                        
+                        }, label:{
+                        if number == 2 {
+                            Image(systemName: icons[number])
+                                    .font(.system(
+                                        size: 25,
+                                        weight: .regular,
+                                        design: .default))
+                                    .foregroundColor(.white)
+                                    .frame(width:60, height: 60)
+                                    .background(Color.blue)
+                                    .cornerRadius(30)
 
+                        }else{
+                        Image(systemName: icons[number])
+                                .font(.system(
+                                    size: 25,
+                                    weight: .regular,
+                                    design: .default))
+                                .foregroundColor(selectedIndex == number ? Color(.label) : Color(UIColor.lightGray))
+                        }
                     })
                     Spacer() //This makes the icons evenly
                 }
@@ -92,6 +113,8 @@ struct ContentView: View {
         }
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
